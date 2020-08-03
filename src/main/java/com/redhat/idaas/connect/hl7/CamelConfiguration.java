@@ -92,7 +92,7 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=opsMgmt_PlatformTransactions&brokers=localhost:9092")
+        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=opsMgmt_platformtransactions&brokers=localhost:9092")
     ;
     /*
     *  Logging
@@ -134,7 +134,7 @@ public class CamelConfiguration extends RouteBuilder {
           // iDAAS DataHub Processing
           .wireTap("direct:auditing")
           // Send to Topic
-          .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_ADT&brokers=localhost:9092")
+          .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_adt&brokers=localhost:9092")
           //Response to HL7 Message Sent Built by platform
           .transform(HL7.ack())
           // This would enable persistence of the ACK
@@ -174,7 +174,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_ORM&brokers=localhost:9092")
+        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_orm&brokers=localhost:9092")
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -212,7 +212,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_ORU&brokers=localhost:9092")
+        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_oru&brokers=localhost:9092")
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -250,7 +250,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_RDE&brokers=localhost:9092")
+        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_rde&brokers=localhost:9092")
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -289,7 +289,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_MFN&brokers=localhost:9092")
+        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_mfn&brokers=localhost:9092")
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -328,7 +328,7 @@ public class CamelConfiguration extends RouteBuilder {
          // iDAAS DataHub Processing
          .wireTap("direct:auditing")
          //Send To Topic
-         .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_MDM&brokers=localhost:9092")
+         .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_mdm&brokers=localhost:9092")
          //Response to HL7 Message Sent Built by platform
          .transform(HL7.ack())
          // This would enable persistence of the ACK
@@ -367,7 +367,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send To Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_SCH&brokers=localhost:9092")
+        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_sch&brokers=localhost:9092")
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -406,7 +406,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send To Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=MCTN_MMS_VXU&brokers=localhost:9092")
+        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_vxu&brokers=localhost:9092")
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
