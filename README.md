@@ -12,7 +12,7 @@ Here are the implementation/data flow steps:
 1. The HL7 client (external to this application) will connect to the specifically defined HL7
 Server socket and typically stay connected.
 2. The HL7 client will send a single HL7 based transaction to the HL7 server.
-3. This Implemented application that acts as an HL7 Server will do the following actions:
+3. This Implemented application that acts as an HL7 Server will do the following actions:<br/>
     a. Receive the HL7 message. Internally, it will audit the data it received to 
     a specifically defined topic.<br/>
     b. The HL7 message will then be processed to a specifically defined topic for this implementation. <br/>
