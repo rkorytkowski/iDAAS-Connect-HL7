@@ -6,7 +6,7 @@ This repository follows a general implementation of a facility, we have named MC
 an application we have named MMS. This implementation specifically defines one HL7 
 socket server endpoint per datatype mentioned above. 
 
-##Implementation
+## Implementation
 Here are the implementation/data flow steps:
 
 1. The HL7 client (external to this application) will connect to the specifically defined HL7
