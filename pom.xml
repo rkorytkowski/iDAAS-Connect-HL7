@@ -7,7 +7,7 @@
 
     <groupId>com.redhat.idaas.connect.hl7</groupId>
     <artifactId>idaas-connect-hl7</artifactId>
-    <version>2020-07</version>
+    <version>2020-09</version>
     <name>iDAAS Connect - HL7</name>
 
     <properties>
