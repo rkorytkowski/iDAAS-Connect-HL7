@@ -16,28 +16,27 @@
  */
 package com.redhat.idaas.connect.hl7;
 
-import ca.uhn.fhir.store.IAuditDataStore;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.hl7.HL7;
 import org.apache.camel.component.hl7.HL7MLLPNettyDecoderFactory;
 import org.apache.camel.component.hl7.HL7MLLPNettyEncoderFactory;
 import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaConstants;
 import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 //import org.springframework.jms.connection.JmsTransactionManager;
 //import javax.jms.ConnectionFactory;
 import org.springframework.stereotype.Component;
-import sun.util.calendar.BaseCalendar;
-import java.time.LocalDate;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
   private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
+
+  @Autowired
+  private ConfigProperties config;
 
   @Bean
   private HL7MLLPNettyEncoderFactory hl7Encoder() {
@@ -61,6 +60,15 @@ public class CamelConfiguration extends RouteBuilder {
   private KafkaComponent kafkaComponent(KafkaEndpoint kafkaEndpoint){
     KafkaComponent kafka = new KafkaComponent();
     return kafka;
+  }
+
+  private String getKafkaTopicUri(String topic) {
+    String kafkaUri = config.getKafkaHost() + ":" + config.getKafkaPort();
+    return "kafka://" + kafkaUri + "?topic=" + topic + "&brokers=" + kafkaUri;
+  }
+
+  private String getHL7Uri(int port) {
+    return "netty4:tcp://0.0.0.0:" + port + "?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder";
   }
 
   /*
@@ -92,7 +100,7 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=opsmgmt_platformtransactions&brokers=localhost:9092")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"))
     ;
     /*
     *  Logging
@@ -116,7 +124,7 @@ public class CamelConfiguration extends RouteBuilder {
      *
      */
 	  // ADT
-	  from("netty4:tcp://0.0.0.0:10001?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+	  from(getHL7Uri(config.getAdtPort()))
           .routeId("hl7Admissions")
           .convertBodyTo(String.class)
           // set Auditing Properties
@@ -134,7 +142,7 @@ public class CamelConfiguration extends RouteBuilder {
           // iDAAS DataHub Processing
           .wireTap("direct:auditing")
           // Send to Topic
-          .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_adt&brokers=localhost:9092")
+          .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_adt"))
           //Response to HL7 Message Sent Built by platform
           .transform(HL7.ack())
           // This would enable persistence of the ACK
@@ -156,7 +164,7 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     // ORM
-    from("netty4:tcp://0.0.0.0:10002?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+    from(getHL7Uri(config.getOrmPort()))
         .routeId("hl7Orders")
         .convertBodyTo(String.class)
         // set Auditing Properties
@@ -174,7 +182,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_orm&brokers=localhost:9092")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_orm"))
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -195,7 +203,7 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     // ORU
-    from("netty4:tcp://0.0.0.0:10003?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+    from(getHL7Uri(config.getOruPort()))
         .routeId("hl7Results")
         .convertBodyTo(String.class)
         // set Auditing Properties
@@ -212,7 +220,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_oru&brokers=localhost:9092")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_oru"))
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -233,7 +241,7 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     // RDE
-    from("netty4:tcp://0.0.0.0:10004?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+    from(getHL7Uri(config.getRdePort()))
         .routeId("hl7Pharmacy")
         .convertBodyTo(String.class)
         // set Auditing Properties
@@ -250,7 +258,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_rde&brokers=localhost:9092")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_rde"))
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -271,7 +279,7 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     // MFN
-    from("netty4:tcp://0.0.0.0:10005?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+    from(getHL7Uri(config.getMfnPort()))
         .routeId("hl7MasterFiles")
         .convertBodyTo(String.class)
         // set Auditing Properties
@@ -289,7 +297,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_mfn&brokers=localhost:9092")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_mfn"))
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -310,7 +318,7 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     // MDM
-    from("netty4:tcp://0.0.0.0:10006?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+    from(getHL7Uri(config.getMdmPort()))
          .routeId("hl7MasterDocs")
          .convertBodyTo(String.class)
          // set Auditing Properties
@@ -328,7 +336,7 @@ public class CamelConfiguration extends RouteBuilder {
          // iDAAS DataHub Processing
          .wireTap("direct:auditing")
          //Send To Topic
-         .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_mdm&brokers=localhost:9092")
+         .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_mdm"))
          //Response to HL7 Message Sent Built by platform
          .transform(HL7.ack())
          // This would enable persistence of the ACK
@@ -349,7 +357,7 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     // SCH
-    from("netty4:tcp://0.0.0.0:10007?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+    from(getHL7Uri(config.getSchPort()))
         .routeId("hl7Schedule")
         .convertBodyTo(String.class)
         // set Auditing Properties
@@ -367,7 +375,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send To Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_sch&brokers=localhost:9092")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_sch"))
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -388,7 +396,7 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     // VXU
-    from("netty4:tcp://0.0.0.0:10008?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder")
+    from(getHL7Uri(config.getVxuPort()))
         .routeId("hl7Vaccination")
         .convertBodyTo(String.class)
         // set Auditing Properties
@@ -406,7 +414,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send To Topic
-        .convertBodyTo(String.class).to("kafka://localhost:9092?topic=mctn_mms_vxu&brokers=localhost:9092")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("mctn_mms_vxu"))
         //Response to HL7 Message Sent Built by platform
         .transform(HL7.ack())
         // This would enable persistence of the ACK
@@ -425,6 +433,7 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
     ;
-
   }
+
+
 }

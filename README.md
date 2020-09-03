@@ -7,10 +7,9 @@ from any vendor and any version.
 
 This solution contains three supporting directories. The intent of these artifacts to enable
 resources to work locally: <br/>
-1. platform-addons: needed software to run locally. This currently contains amq-streams-1.5 (which is the upstream of Kafka 2.5)<br/>
-2. platform-scripts: support running kafka, creating/listing and deleting topics needed for this solution
+1. platform-scripts: support running kafka, creating/listing and deleting topics needed for this solution
 and also building and packaging the solution as well. All the scripts are named to describe their capabilities <br/>
-3. platform-testdata: sample transactions to leverage for using the platform. 
+2. platform-testdata: sample transactions to leverage for using the platform. 
 
 ## Scenario: Integration 
 This repository follows a very common general facility based implementation. The implementation
