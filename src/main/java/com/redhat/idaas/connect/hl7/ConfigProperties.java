@@ -17,38 +17,30 @@
 package com.redhat.idaas.connect.hl7;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
-@Configuration
 @ConfigurationProperties(prefix = "idaas")
 public class ConfigProperties {
 
-    private String kafkaHost = "localhost";
+    private String kafkaBrokers;
 
-    private int kafkaPort = 9092;
+    private int adtPort;
 
-    private int adtPort = 10001;
+    private int ormPort;
 
-    private int ormPort = 10002;
+    private int oruPort;
 
-    private int oruPort = 10003;
+    private int rdePort;
 
-    private int rdePort = 10004;
+    private int mfnPort;
 
-    private int mfnPort = 10005;
+    private int mdmPort;
 
-    private int mdmPort = 10006;
+    private int schPort;
 
-    private int schPort = 10007;
+    private int vxuPort;
 
-    private int vxuPort = 10008;
-
-    public String getKafkaHost() {
-        return kafkaHost;
-    }
-
-    public int getKafkaPort() {
-        return kafkaPort;
+    public String getKafkaBrokers() {
+        return kafkaBrokers;
     }
 
     public int getAdtPort() {
@@ -81,5 +73,41 @@ public class ConfigProperties {
 
     public int getVxuPort() {
         return vxuPort;
+    }
+
+    public void setKafkaBrokers(String kafkaBrokers) {
+        this.kafkaBrokers = kafkaBrokers;
+    }
+
+    public void setAdtPort(int adtPort) {
+        this.adtPort = adtPort;
+    }
+
+    public void setOrmPort(int ormPort) {
+        this.ormPort = ormPort;
+    }
+
+    public void setOruPort(int oruPort) {
+        this.oruPort = oruPort;
+    }
+
+    public void setRdePort(int rdePort) {
+        this.rdePort = rdePort;
+    }
+
+    public void setMfnPort(int mfnPort) {
+        this.mfnPort = mfnPort;
+    }
+
+    public void setMdmPort(int mdmPort) {
+        this.mdmPort = mdmPort;
+    }
+
+    public void setSchPort(int schPort) {
+        this.schPort = schPort;
+    }
+
+    public void setVxuPort(int vxuPort) {
+        this.vxuPort = vxuPort;
     }
 }
