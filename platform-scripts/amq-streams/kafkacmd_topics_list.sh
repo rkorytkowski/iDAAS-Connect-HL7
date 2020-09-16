@@ -1,5 +1,3 @@
-kafkaDir='/Users/alscott/RedHatTech/kafka_2.12-2.5.0.redhat-00003'
-cd $ kafkaDir
-
-bin/kafka-topics.sh --list --bootstrap-server localhost:9092 &
-
+source kafka_version.sh
+cd tmp/"kafka_2.13-$KAFKA_VERSION"
+bin/kafka-topics.sh --list --bootstrap-server localhost:9092

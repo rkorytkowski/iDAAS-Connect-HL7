@@ -63,8 +63,7 @@ public class CamelConfiguration extends RouteBuilder {
   }
 
   private String getKafkaTopicUri(String topic) {
-    String kafkaUri = config.getKafkaHost() + ":" + config.getKafkaPort();
-    return "kafka://" + kafkaUri + "?topic=" + topic + "&brokers=" + kafkaUri;
+    return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
   }
 
   private String getHL7Uri(int port) {

@@ -44,6 +44,35 @@ Additionally, there is a copy statement to remove any specific version, so it ou
 ### Automated Builds
 Automated Builds are going to be done in Azure Pipelines
 
+
+## Running
+
+Once built you can run the solution by executing `./platform-scripts/start-solution.sh`. 
+The script will startup Kafka and iDAAS server.
+
+Alternatively, if you have a running instance of Kafka, you can start a solution with:
+`./platform-scripts/start-solution-with-kafka-brokers.sh --idaas.kafkaBrokers=host1:port1,host2:port2`.
+The script will startup iDAAS server.
+
+It is possible to overwrite configuration by:
+1. Providing parameters via command line e.g.
+`./start-solution.sh --idaas.adtPort=10009`
+2. Creating an application.properties next to the idaas-connect-hl7.jar in the target directory
+3. Creating a properties file in a custom location `./start-solution.sh --spring.config.location=file:./config/application.properties`
+
+Supported properties include:
+```properties
+idaas.kafkaBrokers=localhost:9092 #a comma separated list of kafka brokers e.g. host1:port1,host2:port2
+idaas.adtPort=10001 #port to listen for HL7 ADT messages
+idaas.ormPort=10002
+idaas.oruPort=10003
+idaas.rdePort=10004
+idaas.mfnPort=10005
+idaas.mdmPort=10006
+idaas.schPort=10007
+idaas.vxuPort=10008
+```
+
 ## Ongoing Enhancements
 We maintain all enhancements within the Git Hub portal under the 
 <a href="https://github.com/RedHat-Healthcare/iDAAS-Connect-HL7/projects" target="_blank">projects tab</a>
